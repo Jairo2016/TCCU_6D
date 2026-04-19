@@ -1,0 +1,17 @@
+\chapter{El Subconsciente Cuántico-Informacional y el Sistema MaxNexus}
+\section{Definición del Subconsciente en la TCCU}
+El subconsciente actúa como un nodo cuántico-informacional y un filtro dinámico entre la Conciencia Local (CL) y la Conciencia No-Local (CNL). Su dinámica puede representarse como:
+\begin{equation}
+\frac{dS_{TCCU}}{dt} = \alpha \cdot CNL + \beta \cdot CL + \gamma \cdot IC
+\end{equation}
+
+\section{Implementación Computacional: \texttt{SubconscienteTCCU}}
+El módulo computacional del subconsciente cuantifica la memoria y la coherencia del usuario, calculando una resonancia nodal:
+\begin{lstlisting}[language=Python]
+def actualizar_resonancia(self, info_local, info_no_local, IC):
+    self.resonancia = (self.coherencia * info_no_local + 0.7 * info_local + 0.3 * IC)
+    return self.resonancia
+\end{lstlisting}
+
+\section{Integración Total en el Agente TCCU Jairo}
+El sistema \texttt{tccu\_maxnexus\_total.py} opera como el cerebro MaxNexus, donde subagentes efímeros (ej. ``Alfa'' analítico y ``Beta'' intuitivo) deliberan de forma encriptada, generando resoluciones que se almacenan en un historial persistente de conversaciones privadas (memoria colectiva del Agente TCCU). El agente se despliega en contenedores Docker y expone una CLI interactiva.

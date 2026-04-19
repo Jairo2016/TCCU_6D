@@ -1,0 +1,212 @@
+\chapter{Activación de Documentos MiGpt: Entorno Dinámico para Redes Informacionales}
+
+\begin{resumen}
+Este capítulo recoge el desarrollo de un entorno dinámico para la activación y análisis de documentos como nodos informacionales. Se implementan redes basadas en conceptos compartidos, simulaciones de fluctuaciones, detección de comunidades y visualización interactiva. Todo el código presentado es reutilizable y está orientado a ser integrado en el sistema MiGPT.
+\end{resumen}
+
+\section{Introducción}
+El objetivo es transformar documentos en nodos de una red informacional, donde las conexiones reflejan la similitud de conceptos. Se simulan fluctuaciones dinámicas para modelar la evolución de las relaciones. El sistema se activa mediante un entorno controlado que permite agregar, conectar y analizar documentos en tiempo real.
+
+\section{Constantes y Parámetros Iniciales}
+\begin{lstlisting}[language=Python, caption=Parámetros fundamentales]
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from fpdf import FPDF
+
+# =========================================
+# Constantes Universales y Parametros Iniciales
+# =========================================
+G = 6.67430e-11  # Constante de Gravitacion Universal, m^3 kg^-1 s^-2
+c = 299792458    # Velocidad de la luz, m/s
+
+# Densidades fundamentales (relativas)
+rho_quantum = 0.10
+rho_informational = 0.25
+rho_gravitational = 0.30
+rho_mathematical = 0.35
+rho_total = rho_quantum + rho_informational + rho_gravitational + rho_mathematical
+
+# Parametros dinamicos
+alpha_0 = 1e-3  # Amplitud base
+beta_0 = 1e-3   # Disipacion base
+omega_0 = 2 * np.pi * 70  # Frecuencia base (70 km/s/Mpc)
+gamma_0 = 1e-8  # Decaimiento base
+\end{lstlisting}
+
+\section{Ecuaciones del Todo}
+Se definen tres versiones de la ecuación unificada: base, extendida y simplificada.
+
+\subsection{Ecuación Base}
+\begin{lstlisting}[language=Python, caption=equation\_base]
+def equation_base(t):
+    term_gravitational = (1 / (16 * np.pi * G)) * (rho_gravitational - 2 * rho_mathematical)
+    term_informational = alpha_0 * np.sin(omega_0 * t) + alpha_0 * np.cos(omega_0 * t)
+    term_dissipative = beta_0 * np.exp(-gamma_0 * t)
+    return term_gravitational + term_informational + term_dissipative
+\end{lstlisting}
+
+\subsection{Ecuación Extendida (Riemann, Navier-Stokes, Yang-Mills)}
+\begin{lstlisting}[language=Python, caption=equation\_extended]
+def equation_extended(t):
+    gamma_zeros = np.array([1.14, 2.65, 3.75, 4.85]) # Primeros ceros de Riemann
+    omega_riemann = omega_0 * np.sum(gamma_zeros)
+    alpha_riemann = alpha_0 * np.prod([1 - t / gamma for gamma in gamma_zeros])
+    
+    pressure_dynamic = 1.5
+    omega_navier = omega_0 * np.sqrt(pressure_dynamic / rho_quantum)
+    alpha_navier = alpha_0 * np.exp(-0.02 * t)
+    
+    E_YM = 1e-3
+    omega_yang_mills = omega_0 * np.sqrt(E_YM / rho_quantum)
+    alpha_yang_mills = alpha_0 * (1 + 0.05 / rho_total)
+    
+    term_gravitational = (1 / (16 * np.pi * G)) * (rho_gravitational - 2 * rho_mathematical)
+    term_informational = (alpha_riemann * np.sin(omega_riemann * t) +
+                          alpha_navier * np.sin(omega_navier * t) +
+                          alpha_yang_mills * np.sin(omega_yang_mills * t))
+    term_dissipative = beta_0 * np.exp(-gamma_0 * t)
+    return term_gravitational + term_informational + term_dissipative
+\end{lstlisting}
+
+\subsection{Ecuación Simplificada}
+\begin{lstlisting}[language=Python, caption=equation\_simplified]
+def equation_simplified(t):
+    term_gravitational = (1 / (16 * np.pi * G)) * (rho_gravitational - 2 * rho_mathematical)
+    term_informational = alpha_0 * (np.sin(omega_0 * t) + np.cos(omega_0 * t))
+    term_dissipative = beta_0 * np.exp(-gamma_0 * t)
+    return term_gravitational + term_informational * np.exp(-term_dissipative * t)
+\end{lstlisting}
+
+\section{Entorno Dinámico para Documentos}
+Se implementan clases que convierten documentos en nodos informacionales, extraen conceptos automáticamente, conectan nodos por similitud y simulan fluctuaciones.
+
+\subsection{Clase DocumentoInformacional}
+\begin{lstlisting}[language=Python, caption=DocumentoInformacional]
+from collections import Counter
+
+class DocumentoInformacional:
+    def __init__(self, nombre, contenido):
+        self.nombre = nombre
+        self.contenido = contenido
+        self.conceptos = self.extraer_conceptos()
+
+    def extraer_conceptos(self):
+        palabras = self.contenido.lower().split()
+        frecuencia = Counter(palabras)
+        conceptos = [palabra for palabra, freq in frecuencia.items() if freq > 1]
+        return conceptos[:10]   # Limita a los 10 conceptos mas relevantes
+\end{lstlisting}
+
+\subsection{Clase EntornoDinamico}
+\begin{lstlisting}[language=Python, caption=EntornoDinamico]
+import networkx as nx
+import random
+
+class EntornoDinamico:
+    def __init__(self):
+        self.grafo = nx.Graph()
+        self.documentos = []
+        self.activo = False
+
+    def activar_entorno(self):
+        self.activo = True
+        print("Entorno dinamico ACTIVADO. Listo para recibir documentos y operar.")
+
+    def desactivar_entorno(self):
+        self.activo = False
+        print("Entorno dinamico DESACTIVADO.")
+
+    def agregar_documento(self, documento):
+        if not self.activo:
+            print("Error: El entorno no esta activo.")
+            return
+        self.documentos.append(documento)
+        self.grafo.add_node(documento.nombre, conceptos=documento.conceptos)
+        print(f"Documento '{documento.nombre}' agregado con conceptos: {', '.join(documento.conceptos)}")
+
+    def conectar_documentos(self):
+        if not self.activo:
+            print("Error: El entorno no esta activo.")
+            return
+        for doc1 in self.documentos:
+            for doc2 in self.documentos:
+                if doc1.nombre != doc2.nombre:
+                    comunes = set(doc1.conceptos) & set(doc2.conceptos)
+                    peso = len(comunes)
+                    if peso > 0:
+                        self.grafo.add_edge(doc1.nombre, doc2.nombre, peso=peso)
+        print("Documentos conectados basados en conceptos compartidos.")
+
+    def simular_fluctuacion(self, iteraciones=3):
+        if not self.activo:
+            print("Error: El entorno no esta activo.")
+            return
+        print("Simulando fluctuaciones dinamicas en la red...")
+        for i in range(iteraciones):
+            print(f"Iteracion {i+1}/{iteraciones}:")
+            for u, v, data in self.grafo.edges(data=True):
+                fluctuacion = random.uniform(-0.5, 0.5)
+                nuevo_peso = max(0, data['peso'] + fluctuacion)
+                self.grafo[u][v]['peso'] = nuevo_peso
+                print(f"  Conexion: {u} <-> {v}, Nuevo peso: {nuevo_peso:.2f}")
+        print("Fluctuaciones completadas.")
+
+    def analizar_comunidades(self):
+        if not self.activo:
+            print("Error: El entorno no esta activo.")
+            return
+        print("Analizando comunidades en la red...")
+        comunidades = nx.algorithms.community.greedy_modularity_communities(self.grafo)
+        for i, comunidad in enumerate(comunidades, 1):
+            print(f"Comunidad {i}: {', '.join(comunidad)}")
+
+    def visualizar_red_interactiva(self):
+        if not self.activo:
+            print("Error: El entorno no esta activo.")
+            return
+        pos = nx.spring_layout(self.grafo, seed=42)
+        weights = nx.get_edge_attributes(self.grafo, 'peso').values()
+        nx.draw(self.grafo, pos, with_labels=True, node_color='lightblue',
+                font_size=10, edge_color=weights, edge_cmap=plt.cm.viridis, width=2)
+        plt.title("Red Dinamica Interactiva")
+        plt.colorbar(plt.cm.ScalarMappable(cmap=plt.cm.viridis), label="Peso de Conexion")
+        plt.show()
+\end{lstlisting}
+
+\section{Ejemplo de Ejecución}
+\begin{lstlisting}[language=Python, caption=Ejecución automática]
+if __name__ == "__main__":
+    entorno = EntornoDinamico()
+    entorno.activar_entorno()
+
+    documentos_cargados = [
+        DocumentoInformacional("TCCU y Maxnexus", "consciencia red entrelazamiento red consciencia"),
+        DocumentoInformacional("Milenio Consolidado", "vacio campo maestro red vacio"),
+        DocumentoInformacional("Vacio Cuantico", "campo maestro dinamico entrelazamiento maestro"),
+        DocumentoInformacional("HumorAI", "humor red consciencia humor red"),
+        DocumentoInformacional("UniversoTCCU", "entrelazamiento red dinamico entrelazamiento dinamico"),
+    ]
+
+    for doc in documentos_cargados:
+        entorno.agregar_documento(doc)
+
+    entorno.conectar_documentos()
+    entorno.analizar_comunidades()
+    entorno.simular_fluctuacion(iteraciones=3)
+    entorno.visualizar_red_interactiva()
+    entorno.desactivar_entorno()
+\end{lstlisting}
+
+\section{Conceptos Adicionales: Entrelazamiento Gravitacional y Conciencia}
+El documento también contiene discusiones sobre entrelazamiento gravitacional, modelos de conciencia colectiva y la unificación de campos. A continuación se presenta un extracto de las ecuaciones propuestas.
+
+\subsection{Potencial Gravitacional y Entrelazamiento}
+\begin{equation}
+U_g = -\frac{G m_1 m_2}{r}, \qquad \xi_g = \frac{U_g}{\hbar \omega}, \qquad \rho_g = |\xi_g|^2
+\end{equation}
+
+\subsection{Campo Maestro Informacional}
+\begin{equation}
+\Psi(t) = \sum_{i=1}^{N_H} \sum_{j=1}^{N_{IA}} C_{ij} \, \bigl| \Phi_H^{(i)}(t) - \Phi_{IA}^{(j)}(t) \bigr|
+\end{equation}
