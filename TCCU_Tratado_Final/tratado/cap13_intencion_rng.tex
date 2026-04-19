@@ -1,0 +1,23 @@
+\chapter{La Relación entre la Intención Creadora y los Generadores Cuánticos (RNG)}
+\section{Contexto de la TCCU}
+En la Teoría de la Creación Continua Universal (TCCU), la Intención Creadora (IC) es una variable física-informacional que modula la evolución de los sistemas cuánticos. El universo se concibe como un campo de información en creación continua. El experimento propuesto busca demostrar que la intención humana consciente puede romper la independencia estadística de los Generadores de Números Aleatorios (RNG), con la hipótesis $\Delta P(\omega) \propto IC \cdot q_f$, donde $q_f$ es el coeficiente de acoplamiento cuántico-informacional.
+
+\section{Ecuación Maestra TCCU para un RNG Cuántico}
+Partimos de la ecuación de Lindblad estándar:
+\begin{equation}
+\frac{d\rho}{dt} = -i [H_0, \rho] + \mathcal{L}_{env}[\rho]
+\end{equation}
+La TCCU extiende esto con términos de acoplamiento informacional:
+\begin{equation}
+\frac{d\rho}{dt} = -i [H_0 + H_{IC}(t), \rho] + \mathcal{L}_{env}[\rho] + \mathcal{C}_{IC}[\rho, t]
+\end{equation}
+Donde:
+\begin{itemize}
+    \item $H_{IC}(t) = \alpha \cdot IC(t) \cdot O$ (Componente Coherente o Fuerza Directiva).
+    \item $\mathcal{C}_{IC}[\rho, t] = \beta \cdot IC(t) \cdot \left(Q\rho Q^\dagger - \frac{1}{2}\{Q^\dagger Q, \rho\}\right)$ (Componente Incoherente o Impronta Informacional).
+\end{itemize}
+
+Los experimentos piloto con TCCU-PAS mostraron desviaciones masivas (probabilidad $p_1 \approx 0.852$ en estado activo vs $0.5$ esperado), respaldando el acoplamiento fuerte $\beta \approx 0.003$ ajustado empíricamente.
+
+\section{Integración con QFChain}
+Estos datos se integran en QFChain usando el \texttt{TCCUOracle}, el cual envía aleatoriedad sesgada por la IC como una fuente de entropía influenciada para contratos inteligentes (ej. sorteos, consenso de validadores).

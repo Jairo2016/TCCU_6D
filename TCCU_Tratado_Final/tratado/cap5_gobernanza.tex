@@ -1,0 +1,19 @@
+\chapter{Gobernanza y Soberanía: QFChain}
+La red QFChain es la implementación práctica de la gobernanza descentralizada basada en los principios de TCCU. La \textbf{Constitución v6.5} establece el \emph{Oráculo de Consenso}.
+
+\section{La inmunidad por excelencia}
+Un nodo es declarado \emph{Socio de Valor} si su coherencia individual (CV) supera el promedio de la red:
+\begin{equation}
+\text{Inmune} \iff \text{CV}_{\text{nodo}} > \overline{\text{CV}}_{\text{red}} + 0.1
+\end{equation}
+Esto protege a los especialistas honestos que votan consistentemente con su dominio, distinguiéndolos de los cárteles parasitarios.
+
+\section{Detección de colusión}
+La información mutua normalizada se calcula sobre una ventana deslizante de 40 rondas:
+\begin{equation}
+\text{MI}_{ij} = \frac{H_i + H_j - H_{ij}}{\min(H_i, H_j)}
+\end{equation}
+Si $\text{MI}_{ij} > \theta$ y ninguno de los dos nodos es inmune, ambos reciben una penalización de reputación de $-0.25$ por ronda.
+
+\section{Resultados del Ciclo 15}
+Con 20 nodos escalados, se logró un Gini final de $0.181$ y una coherencia promedio de $0.851$, validando la antifragilidad del sistema.
